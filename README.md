@@ -1,4 +1,4 @@
-SharingShard
+SharingShard ---
 ==================
 Share a knowledge capsule with friends asking to enhance the information and engage in a conversation
 
