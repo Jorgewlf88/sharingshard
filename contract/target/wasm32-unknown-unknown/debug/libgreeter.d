@@ -1,0 +1,1 @@
+/Users/jorgeortega/Documents/SUGESTION/proyectos/near-protocol/sharingshard/contract/target/wasm32-unknown-unknown/debug/libgreeter.rlib: /Users/jorgeortega/Documents/SUGESTION/proyectos/near-protocol/sharingshard/contract/src/lib.rs
