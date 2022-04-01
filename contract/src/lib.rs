@@ -23,20 +23,16 @@ impl Default for Welcome {
 
 #[near_bindgen]
 impl Welcome {
-    pub fn set_marks(&mut self, wallet: String, mark_1: String, coment1: String, mark_2: String, coment2: String, mark_3:String, coment3: String) {
-        //let account_id = env::signer_account_id();
+    pub fn set_greeting(&mut self, mark_1: String, coment1: String) {
+        let account_id = env::signer_account_id();
         let mut vec: Vec<String> = Vec::new();
 
         vec.push(mark_1);
         vec.push(coment1);
-        vec.push(mark_2);
-        vec.push(coment2);
-        vec.push(mark_3);
-        vec.push(coment3);
         // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", vec[0], wallet,).as_bytes());
+        env::log(format!("Saving greeting '{}' for account '{}'", vec[0], account_id,).as_bytes());
 
-        self.records.insert(&wallet, &vec);
+        self.records.insert(&account_id, &vec);
     }
 
     // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
@@ -45,6 +41,8 @@ impl Welcome {
     pub fn get_greeting(&self, account_id: String) -> Vec<String> {
         match self.records.get(&account_id) {
             Some(greeting) => greeting,
+            Some(mark_1) => mark_1,
+            Some(coment1) => coment1,
             None => Vec::new(),
         }
     }
