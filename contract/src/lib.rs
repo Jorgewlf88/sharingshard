@@ -1,16 +1,3 @@
-/*
- * This is an example of a Rust smart contract with two simple, symmetric functions:
- *
- * 1. set_greeting: accepts a greeting, such as "howdy", and records it for the user (account_id)
- *    who sent the request
- * 2. get_greeting: accepts an account_id and returns the greeting saved for it, defaulting to
- *    "Hello"
- *
- * Learn more about writing NEAR smart contracts with Rust:
- * https://github.com/near/near-sdk-rs
- *
- */
-
 // To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen, setup_alloc};
@@ -23,7 +10,7 @@ setup_alloc!();
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Welcome {
-    records: LookupMap<String, String>,
+    records: LookupMap<String, Vec<String>>,
 }
 
 impl Default for Welcome {
@@ -36,25 +23,34 @@ impl Default for Welcome {
 
 #[near_bindgen]
 impl Welcome {
-    pub fn set_greeting(&mut self, message: String) {
-        let account_id = env::signer_account_id();
+    pub fn set_marks(&mut self, wallet: String, mark_1: String, coment1: String, mark_2: String, coment2: String, mark_3:String, coment3: String) {
+        //let account_id = env::signer_account_id();
+        let mut vec: Vec<String> = Vec::new();
 
+        vec.push(mark_1);
+        vec.push(coment1);
+        vec.push(mark_2);
+        vec.push(coment2);
+        vec.push(mark_3);
+        vec.push(coment3);
         // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id,).as_bytes());
+        env::log(format!("Saving greeting '{}' for account '{}'", vec[0], wallet,).as_bytes());
 
-        self.records.insert(&account_id, &message);
+        self.records.insert(&wallet, &vec);
     }
 
     // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
     // self.records.get(&account_id) is not yet defined.
     // Learn more: https://doc.rust-lang.org/book/ch06-02-match.html#matching-with-optiont
-    pub fn get_greeting(&self, account_id: String) -> String {
+    pub fn get_greeting(&self, account_id: String) -> Vec<String> {
         match self.records.get(&account_id) {
             Some(greeting) => greeting,
-            None => "Hello".to_string(),
+            None => Vec::new(),
         }
     }
 }
+
+
 
 /*
  * The rest of this file holds the inline tests for the code above
@@ -119,3 +115,6 @@ mod tests {
         );
     }
 }
+
+
+

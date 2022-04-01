@@ -69,7 +69,7 @@ export default function App() {
         Sign out
       </button>
       <main>
-        <h1>
+        <div>
           <label
             htmlFor="greeting"
             style={{
@@ -79,17 +79,37 @@ export default function App() {
           >
             {greeting}
           </label>
+
+        </div>
+
+        <div>
+          <label
+            htmlFor="greeting2"
+            style={{
+              color: 'var(--secondary)',
+              borderBottom: '2px solid var(--secondary)'
+            }}
+          >
+            {greeting2}
+          </label>
+
+        </div>
+
+
+        <div className="alert alert-success" role="alert">
           {' '/* React trims whitespace around tags; insert literal space character when needed */}
-          {window.accountId}!
-        </h1>
+            {window.accountId}!
+        </div>
+
         <form onSubmit={async event => {
           event.preventDefault()
 
           // get elements from the form using their id attribute
-          const { fieldset, greeting } = event.target.elements
+          const { fieldset, greeting, greeting2 } = event.target.elements
 
           // hold onto new user-entered value from React's SynthenticEvent for use after `await` call
           const newGreeting = greeting.value
+          const newGreeting2 = greeting2.value
 
           // disable the form while the value gets updated on-chain
           fieldset.disabled = true
@@ -98,8 +118,10 @@ export default function App() {
             // make an update call to the smart contract
             await window.contract.set_greeting({
               // pass the value that the user entered in the greeting field
-              message: newGreeting
+              message: newGreeting,
+              message2: newGreeting2
             })
+
           } catch (e) {
             alert(
               'Something went wrong! ' +
@@ -113,7 +135,7 @@ export default function App() {
           }
 
           // update local `greeting` variable to match persisted value
-          set_greeting(newGreeting)
+          set_greeting(newGreeting, newGreeting2)
 
           // show Notification
           setShowNotification(true)
@@ -133,7 +155,7 @@ export default function App() {
                 marginBottom: '0.5em'
               }}
             >
-              Change greeting
+              Field 1
             </label>
             <div style={{ display: 'flex' }}>
               <input
@@ -143,13 +165,35 @@ export default function App() {
                 onChange={e => setButtonDisabled(e.target.value === greeting)}
                 style={{ flex: 1 }}
               />
-              <button
+            </div>
+
+            
+            <label
+              htmlFor="greeting2"
+              style={{
+                display: 'block',
+                color: 'var(--gray)',
+                marginBottom: '0.5em'
+              }}
+            >
+              Field 2
+            </label>
+            <div style={{ display: 'flex' }}>
+              <input
+                autoComplete="off"
+                defaultValue={greeting}
+                id="greeting2"
+                onChange={e => setButtonDisabled(e.target.value === greeting2)}
+                style={{ flex: 1 }}
+              />
+            </div>
+            <button
                 disabled={buttonDisabled}
                 style={{ borderRadius: '0 5px 5px 0' }}
               >
                 Save
-              </button>
-            </div>
+            </button>
+
           </fieldset>
         </form>
         <p>
